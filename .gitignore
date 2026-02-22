@@ -1,0 +1,9 @@
+node_modules/
+.expo/
+dist/
+.env
+.env.local
+*.log
+.DS_Store
+apps/mobile/.DS_Store
+apps/.DS_Store
