@@ -25,6 +25,8 @@ export default function Index() {
       return <Redirect href="/school" />;
     case 'teacher':
       return <Redirect href="/teacher" />;
+    case 'parent':
+      return <Redirect href="/parent" />;
     case 'student':
     default:
       return <Redirect href="/student" />;

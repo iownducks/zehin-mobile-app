@@ -1,4 +1,3 @@
-import { usePathname, useRouter } from 'expo-router';
 import { App } from 'expo-router/build/qualified-entry';
 import React, { memo, useEffect, useState } from 'react';
 import { ErrorBoundaryWrapper } from './__create/SharedErrorBoundary';
@@ -76,33 +75,7 @@ const useHandshakeParent = () => {
 };
 
 const CreateApp = () => {
-  const router = useRouter();
-  const pathname = usePathname();
   useHandshakeParent();
-
-  useEffect(() => {
-    const handleMessage = (event: MessageEvent) => {
-      if (event.data.type === 'sandbox:navigation' && event.data.pathname !== pathname) {
-        router.push(event.data.pathname);
-      }
-    };
-
-    window.addEventListener('message', handleMessage);
-    window.parent.postMessage({ type: 'sandbox:mobile:ready' }, '*');
-    return () => {
-      window.removeEventListener('message', handleMessage);
-    };
-  }, [router, pathname]);
-
-  useEffect(() => {
-    window.parent.postMessage(
-      {
-        type: 'sandbox:mobile:navigation',
-        pathname,
-      },
-      '*'
-    );
-  }, [pathname]);
 
   return (
     <>

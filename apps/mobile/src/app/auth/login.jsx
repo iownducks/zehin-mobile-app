@@ -46,6 +46,9 @@ export default function Login() {
         case 'teacher':
           router.replace('/teacher');
           break;
+        case 'parent':
+          router.replace('/parent');
+          break;
         case 'student':
         default:
           router.replace('/student');
@@ -62,6 +65,7 @@ export default function Login() {
     { label: 'School Admin', email: 'principal@gmhsl.edu.pk', password: 'school123', color: '#1565C0' },
     { label: 'Teacher', email: 'ayesha@gmhsl.edu.pk', password: 'teacher123', color: '#2E7D32' },
     { label: 'Student', email: 'ahmed@student.gmhsl.edu.pk', password: 'student123', color: '#E65100' },
+    { label: 'Parent', email: 'parent@gmhsl.edu.pk', password: 'parent123', color: '#006064' },
   ];
 
   return (

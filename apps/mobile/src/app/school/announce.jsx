@@ -100,10 +100,10 @@ export default function SchoolAnnounce() {
 
               <Text style={{ color: '#424242', marginBottom: 10, fontSize: 13, fontWeight: '500' }}>Send to:</Text>
               <View style={{ flexDirection: 'row', gap: 10, marginBottom: 20 }}>
-                {['student', 'teacher'].map((role) => (
+                {['student', 'teacher', 'parent'].map((role) => (
                   <TouchableOpacity key={role} onPress={() => toggleRole(role)}
                     style={{ flex: 1, paddingVertical: 10, borderRadius: 10, backgroundColor: form.targetRoles.includes(role) ? '#1A237E' : '#F5F5F5', alignItems: 'center', borderWidth: 1, borderColor: form.targetRoles.includes(role) ? '#1A237E' : '#E0E0E0' }}>
-                    <Text style={{ color: form.targetRoles.includes(role) ? '#FFF' : '#424242', fontWeight: '600', textTransform: 'capitalize', fontSize: 14 }}>{role}s</Text>
+                    <Text style={{ color: form.targetRoles.includes(role) ? '#FFF' : '#424242', fontWeight: '600', textTransform: 'capitalize', fontSize: 13 }}>{role}s</Text>
                   </TouchableOpacity>
                 ))}
               </View>

@@ -104,6 +104,54 @@ const seedData = {
       board: 'Punjab',
       createdAt: new Date().toISOString(),
     },
+    // Parent
+    {
+      id: 'parent_1',
+      name: 'Mr. Ali Khan',
+      email: 'parent@gmhsl.edu.pk',
+      password: 'parent123',
+      role: 'parent',
+      schoolId: 'school_1',
+      childId: 'student_1',
+      phone: '0300-1234567',
+      createdAt: new Date().toISOString(),
+    },
+  ],
+  fees: [
+    {
+      id: 'fee_1',
+      studentId: 'student_1',
+      schoolId: 'school_1',
+      title: 'Monthly Fee - February 2026',
+      amount: 3500,
+      dueDate: new Date(Date.now() + 5 * 24 * 60 * 60 * 1000).toISOString(),
+      status: 'pending',
+      month: 'February 2026',
+      createdAt: new Date().toISOString(),
+    },
+    {
+      id: 'fee_2',
+      studentId: 'student_1',
+      schoolId: 'school_1',
+      title: 'Monthly Fee - January 2026',
+      amount: 3500,
+      dueDate: new Date(Date.now() - 20 * 24 * 60 * 60 * 1000).toISOString(),
+      status: 'paid',
+      paidOn: new Date(Date.now() - 22 * 24 * 60 * 60 * 1000).toISOString(),
+      month: 'January 2026',
+      createdAt: new Date().toISOString(),
+    },
+    {
+      id: 'fee_3',
+      studentId: 'student_1',
+      schoolId: 'school_1',
+      title: 'Annual Fund',
+      amount: 5000,
+      dueDate: new Date(Date.now() - 10 * 24 * 60 * 60 * 1000).toISOString(),
+      status: 'overdue',
+      month: 'Annual 2026',
+      createdAt: new Date().toISOString(),
+    },
   ],
   tasks: [
     {
@@ -288,6 +336,233 @@ Newton's laws apply to objects in inertial (non-accelerating) reference frames.`
       targetRoles: ['teacher'],
     },
   ],
+  books: [
+    {
+      id: 'book_1',
+      title: 'Mathematics Class 9',
+      subject: 'Mathematics',
+      classLevel: 9,
+      board: 'Punjab',
+      coverColor: '#1565C0',
+      description: 'Punjab Textbook Board Mathematics for Class 9. Covers algebra, geometry, trigonometry and statistics.',
+      chapters: [
+        { id: 'book_1_ch1', number: 1, title: 'Matrices and Determinants', pages: 45 },
+        { id: 'book_1_ch2', number: 2, title: 'Real and Complex Numbers', pages: 38 },
+        { id: 'book_1_ch3', number: 3, title: 'Logarithms', pages: 30 },
+        { id: 'book_1_ch4', number: 4, title: 'Algebraic Expressions and Algebraic Formulas', pages: 42 },
+        { id: 'book_1_ch5', number: 5, title: 'Factorisation', pages: 35 },
+        { id: 'book_1_ch6', number: 6, title: 'Algebraic Manipulation', pages: 28 },
+        { id: 'book_1_ch7', number: 7, title: 'Linear Equations and Inequalities', pages: 33 },
+        { id: 'book_1_ch8', number: 8, title: 'Linear Graphs and Their Applications', pages: 40 },
+        { id: 'book_1_ch9', number: 9, title: 'Introduction to Coordinate Geometry', pages: 36 },
+        { id: 'book_1_ch10', number: 10, title: 'Congruent Triangles', pages: 29 },
+      ],
+    },
+    {
+      id: 'book_2',
+      title: 'Mathematics Class 10',
+      subject: 'Mathematics',
+      classLevel: 10,
+      board: 'Punjab',
+      coverColor: '#0D47A1',
+      description: 'Punjab Textbook Board Mathematics for Class 10. Advanced algebra, geometry and trigonometry.',
+      chapters: [
+        { id: 'book_2_ch1', number: 1, title: 'Quadratic Equations', pages: 48 },
+        { id: 'book_2_ch2', number: 2, title: 'Theory of Quadratic Equations', pages: 40 },
+        { id: 'book_2_ch3', number: 3, title: 'Variations', pages: 32 },
+        { id: 'book_2_ch4', number: 4, title: 'Partial Fractions', pages: 35 },
+        { id: 'book_2_ch5', number: 5, title: 'Sets and Functions', pages: 44 },
+        { id: 'book_2_ch6', number: 6, title: 'Basic Statistics', pages: 38 },
+        { id: 'book_2_ch7', number: 7, title: 'Introduction to Trigonometry', pages: 50 },
+        { id: 'book_2_ch8', number: 8, title: 'Projection of a Side of a Triangle', pages: 28 },
+      ],
+    },
+    {
+      id: 'book_3',
+      title: 'English Class 9',
+      subject: 'English',
+      classLevel: 9,
+      board: 'Punjab',
+      coverColor: '#2E7D32',
+      description: 'Punjab Textbook Board English for Class 9. Prose, poetry, grammar and writing skills.',
+      chapters: [
+        { id: 'book_3_ch1', number: 1, title: 'Unit 1: Books', pages: 22 },
+        { id: 'book_3_ch2', number: 2, title: 'Unit 2: Honesty', pages: 24 },
+        { id: 'book_3_ch3', number: 3, title: 'Unit 3: Allama Iqbal', pages: 20 },
+        { id: 'book_3_ch4', number: 4, title: 'Unit 4: Television', pages: 26 },
+        { id: 'book_3_ch5', number: 5, title: 'Unit 5: My Hobby', pages: 22 },
+        { id: 'book_3_ch6', number: 6, title: 'Unit 6: The Jewel of the World', pages: 28 },
+        { id: 'book_3_ch7', number: 7, title: 'Unit 7: The Reward of Diligence', pages: 24 },
+        { id: 'book_3_ch8', number: 8, title: 'Unit 8: Road Safety', pages: 20 },
+        { id: 'book_3_ch9', number: 9, title: 'Grammar: Tenses and Voice', pages: 32 },
+        { id: 'book_3_ch10', number: 10, title: 'Writing Skills: Essays and Letters', pages: 30 },
+      ],
+    },
+    {
+      id: 'book_4',
+      title: 'English Class 10',
+      subject: 'English',
+      classLevel: 10,
+      board: 'Punjab',
+      coverColor: '#1B5E20',
+      description: 'Punjab Textbook Board English for Class 10. Advanced prose, poetry and composition.',
+      chapters: [
+        { id: 'book_4_ch1', number: 1, title: 'Unit 1: The Saviour of Mankind', pages: 26 },
+        { id: 'book_4_ch2', number: 2, title: 'Unit 2: Courtesy', pages: 22 },
+        { id: 'book_4_ch3', number: 3, title: 'Unit 3: The Man Who Was a Hospital', pages: 24 },
+        { id: 'book_4_ch4', number: 4, title: 'Unit 4: My Financial Career', pages: 20 },
+        { id: 'book_4_ch5', number: 5, title: 'Unit 5: China\'s Way to Progress', pages: 28 },
+        { id: 'book_4_ch6', number: 6, title: 'Unit 6: The Quaid\'s Vision', pages: 24 },
+        { id: 'book_4_ch7', number: 7, title: 'Unit 7: I Have a Dream', pages: 26 },
+        { id: 'book_4_ch8', number: 8, title: 'Grammar: Advanced Structures', pages: 35 },
+      ],
+    },
+    {
+      id: 'book_5',
+      title: 'Urdu Class 9',
+      subject: 'Urdu',
+      classLevel: 9,
+      board: 'Punjab',
+      coverColor: '#6A1B9A',
+      description: 'Punjab Textbook Board Urdu for Class 9. Classical and modern Urdu prose and poetry.',
+      chapters: [
+        { id: 'book_5_ch1', number: 1, title: 'نظم: لب پہ آتی ہے دعا', pages: 18 },
+        { id: 'book_5_ch2', number: 2, title: 'سبق: حضرت محمد ﷺ', pages: 22 },
+        { id: 'book_5_ch3', number: 3, title: 'نظم: ہمالہ', pages: 16 },
+        { id: 'book_5_ch4', number: 4, title: 'سبق: میرا وطن', pages: 20 },
+        { id: 'book_5_ch5', number: 5, title: 'غزل: میر تقی میر', pages: 18 },
+        { id: 'book_5_ch6', number: 6, title: 'سبق: محنت کی عظمت', pages: 22 },
+        { id: 'book_5_ch7', number: 7, title: 'قواعد: اسم، فعل، صفت', pages: 30 },
+        { id: 'book_5_ch8', number: 8, title: 'مضمون نویسی', pages: 28 },
+      ],
+    },
+    {
+      id: 'book_6',
+      title: 'Urdu Class 8',
+      subject: 'Urdu',
+      classLevel: 8,
+      board: 'Punjab',
+      coverColor: '#4A148C',
+      description: 'Punjab Textbook Board Urdu for Class 8. Urdu prose, poetry and grammar fundamentals.',
+      chapters: [
+        { id: 'book_6_ch1', number: 1, title: 'سبق: قائداعظم کا پیغام', pages: 20 },
+        { id: 'book_6_ch2', number: 2, title: 'نظم: پاکستان کا مطلب کیا', pages: 16 },
+        { id: 'book_6_ch3', number: 3, title: 'سبق: خدمت خلق', pages: 18 },
+        { id: 'book_6_ch4', number: 4, title: 'قصیدہ: مدح', pages: 20 },
+        { id: 'book_6_ch5', number: 5, title: 'قواعد: جملے کی اقسام', pages: 28 },
+        { id: 'book_6_ch6', number: 6, title: 'خط نویسی اور درخواست', pages: 26 },
+      ],
+    },
+    {
+      id: 'book_7',
+      title: 'Science Class 7',
+      subject: 'Science',
+      classLevel: 7,
+      board: 'Punjab',
+      coverColor: '#00695C',
+      description: 'Punjab Textbook Board General Science for Class 7. Biology, chemistry and physics concepts.',
+      chapters: [
+        { id: 'book_7_ch1', number: 1, title: 'Properties of Matter', pages: 30 },
+        { id: 'book_7_ch2', number: 2, title: 'Atoms and Molecules', pages: 28 },
+        { id: 'book_7_ch3', number: 3, title: 'The Cell', pages: 32 },
+        { id: 'book_7_ch4', number: 4, title: 'Photosynthesis', pages: 26 },
+        { id: 'book_7_ch5', number: 5, title: 'Human Digestive System', pages: 34 },
+        { id: 'book_7_ch6', number: 6, title: 'Electricity and Magnetism', pages: 38 },
+        { id: 'book_7_ch7', number: 7, title: 'Earth and Space', pages: 30 },
+        { id: 'book_7_ch8', number: 8, title: 'Environment and Ecology', pages: 28 },
+      ],
+    },
+    {
+      id: 'book_8',
+      title: 'Science Class 8',
+      subject: 'Science',
+      classLevel: 8,
+      board: 'Punjab',
+      coverColor: '#004D40',
+      description: 'Punjab Textbook Board General Science for Class 8. Advanced concepts in natural sciences.',
+      chapters: [
+        { id: 'book_8_ch1', number: 1, title: 'Chemical Reactions', pages: 36 },
+        { id: 'book_8_ch2', number: 2, title: 'Acids, Bases and Salts', pages: 32 },
+        { id: 'book_8_ch3', number: 3, title: 'Reproduction in Plants', pages: 28 },
+        { id: 'book_8_ch4', number: 4, title: 'Reproduction in Animals', pages: 30 },
+        { id: 'book_8_ch5', number: 5, title: 'Genetics and Heredity', pages: 34 },
+        { id: 'book_8_ch6', number: 6, title: 'Force and Motion', pages: 38 },
+        { id: 'book_8_ch7', number: 7, title: 'Sound', pages: 26 },
+        { id: 'book_8_ch8', number: 8, title: 'Light', pages: 30 },
+      ],
+    },
+    {
+      id: 'book_9',
+      title: 'Islamic Studies Class 9',
+      subject: 'Islamic Studies',
+      classLevel: 9,
+      board: 'Federal',
+      coverColor: '#E65100',
+      description: 'Federal Board Islamic Studies for Class 9. Quran, Hadith, Fiqh and Islamic history.',
+      chapters: [
+        { id: 'book_9_ch1', number: 1, title: 'Belief in Allah (Tawhid)', pages: 30 },
+        { id: 'book_9_ch2', number: 2, title: 'Prophethood (Risalat)', pages: 28 },
+        { id: 'book_9_ch3', number: 3, title: 'The Holy Quran', pages: 35 },
+        { id: 'book_9_ch4', number: 4, title: 'Hadith and Sunnah', pages: 30 },
+        { id: 'book_9_ch5', number: 5, title: 'Prayer and Worship (Ibadat)', pages: 32 },
+        { id: 'book_9_ch6', number: 6, title: 'Islamic Ethics and Morality', pages: 28 },
+        { id: 'book_9_ch7', number: 7, title: 'The Rightly Guided Caliphs', pages: 40 },
+        { id: 'book_9_ch8', number: 8, title: 'Islamic Civilization', pages: 36 },
+      ],
+    },
+    {
+      id: 'book_10',
+      title: 'Islamic Studies Class 6',
+      subject: 'Islamic Studies',
+      classLevel: 6,
+      board: 'Punjab',
+      coverColor: '#BF360C',
+      description: 'Punjab Textbook Board Islamic Studies for Class 6. Basic Islamic beliefs and practices.',
+      chapters: [
+        { id: 'book_10_ch1', number: 1, title: 'Surah Al-Fatiha', pages: 20 },
+        { id: 'book_10_ch2', number: 2, title: 'Pillars of Islam', pages: 24 },
+        { id: 'book_10_ch3', number: 3, title: 'Pillars of Faith (Iman)', pages: 22 },
+        { id: 'book_10_ch4', number: 4, title: 'Prophet Muhammad\'s (PBUH) Life', pages: 30 },
+        { id: 'book_10_ch5', number: 5, title: 'Islamic Manners and Etiquette', pages: 26 },
+        { id: 'book_10_ch6', number: 6, title: 'Stories of the Prophets', pages: 32 },
+      ],
+    },
+    {
+      id: 'book_11',
+      title: 'Pakistan Studies Class 10',
+      subject: 'Pakistan Studies',
+      classLevel: 10,
+      board: 'Punjab',
+      coverColor: '#33691E',
+      description: 'Punjab Textbook Board Pakistan Studies for Class 10. History, geography and civics of Pakistan.',
+      chapters: [
+        { id: 'book_11_ch1', number: 1, title: 'Historical Background of Pakistan', pages: 40 },
+        { id: 'book_11_ch2', number: 2, title: 'The Pakistan Movement', pages: 38 },
+        { id: 'book_11_ch3', number: 3, title: 'Geography of Pakistan', pages: 44 },
+        { id: 'book_11_ch4', number: 4, title: 'Natural Resources of Pakistan', pages: 36 },
+        { id: 'book_11_ch5', number: 5, title: 'Agriculture and Economy', pages: 34 },
+        { id: 'book_11_ch6', number: 6, title: 'Governance and Constitution', pages: 38 },
+        { id: 'book_11_ch7', number: 7, title: 'Foreign Policy of Pakistan', pages: 30 },
+      ],
+    },
+    {
+      id: 'book_12',
+      title: 'Pakistan Studies Class 9',
+      subject: 'Pakistan Studies',
+      classLevel: 9,
+      board: 'Federal',
+      coverColor: '#558B2F',
+      description: 'Federal Board Pakistan Studies for Class 9. Culture, history and civic education.',
+      chapters: [
+        { id: 'book_12_ch1', number: 1, title: 'Ideology of Pakistan', pages: 32 },
+        { id: 'book_12_ch2', number: 2, title: 'Quaid-e-Azam Muhammad Ali Jinnah', pages: 36 },
+        { id: 'book_12_ch3', number: 3, title: 'Allama Muhammad Iqbal', pages: 30 },
+        { id: 'book_12_ch4', number: 4, title: 'Culture and Heritage of Pakistan', pages: 34 },
+        { id: 'book_12_ch5', number: 5, title: 'Major Industries of Pakistan', pages: 30 },
+        { id: 'book_12_ch6', number: 6, title: 'Problems and Challenges', pages: 28 },
+      ],
+    },
+  ],
   quizzes: [
     {
       id: 'quiz_1',
@@ -350,7 +625,12 @@ export const useSchoolStore = create((set, get) => ({
     try {
       const stored = await AsyncStorage.getItem(STORAGE_KEY);
       if (stored) {
-        set({ data: JSON.parse(stored), isLoaded: true });
+        const parsed = JSON.parse(stored);
+        // Migrate: ensure fees array exists
+        if (!parsed.fees) parsed.fees = seedData.fees;
+        // Migrate: ensure books array exists
+        if (!parsed.books) parsed.books = seedData.books;
+        set({ data: parsed, isLoaded: true });
       } else {
         // First run: seed data
         await AsyncStorage.setItem(STORAGE_KEY, JSON.stringify(seedData));
@@ -465,7 +745,7 @@ export const useSchoolStore = create((set, get) => ({
     return newTask;
   },
 
-  submitTask: async (taskId, studentId, note) => {
+  submitTask: async (taskId, studentId, note, attachments = []) => {
     const { data, _save } = get();
     const newData = {
       ...data,
@@ -478,6 +758,7 @@ export const useSchoolStore = create((set, get) => ({
                 {
                   studentId,
                   note,
+                  attachments,
                   submittedAt: new Date().toISOString(),
                   status: 'submitted',
                   grade: null,
@@ -579,6 +860,21 @@ export const useSchoolStore = create((set, get) => ({
     return newAnn;
   },
 
+  // ── Parent ────────────────────────────────────────────────────────────────
+  registerParent: async (parentData) => {
+    const { data, _save } = get();
+    const id = 'parent_' + Date.now();
+    const newUser = {
+      id,
+      ...parentData,
+      role: 'parent',
+      createdAt: new Date().toISOString(),
+    };
+    const newData = { ...data, users: [...data.users, newUser] };
+    await _save(newData);
+    return newUser;
+  },
+
   // ── Selectors ─────────────────────────────────────────────────────────────
   getSchool: (schoolId) => get().data?.schools.find((s) => s.id === schoolId),
   getUser: (userId) => get().data?.users.find((u) => u.id === userId),
@@ -606,5 +902,29 @@ export const useSchoolStore = create((set, get) => ({
     ) || [],
   getSchoolAnnouncements: (schoolId) =>
     get().data?.announcements.filter((a) => a.schoolId === schoolId) || [],
+  // Parent-specific: only announcements targeting parents or all
+  getParentAnnouncements: (schoolId) =>
+    get().data?.announcements.filter(
+      (a) => a.schoolId === schoolId &&
+        (!a.targetRoles?.length || a.targetRoles.includes('parent'))
+    ) || [],
+  getChildFees: (studentId) =>
+    get().data?.fees?.filter((f) => f.studentId === studentId) || [],
+  // Teachers who teach the child's class
+  getChildTeachers: (schoolId, classLevel) =>
+    get().data?.users.filter(
+      (u) => u.role === 'teacher' && u.schoolId === schoolId &&
+        u.classesAssigned?.includes(classLevel)
+    ) || [],
   getAllSchools: () => get().data?.schools || [],
+  getBooks: (filters = {}) => {
+    const books = get().data?.books || [];
+    return books.filter((book) => {
+      if (filters.classLevel && book.classLevel !== filters.classLevel) return false;
+      if (filters.board && filters.board !== 'All' && book.board !== filters.board) return false;
+      if (filters.subject && filters.subject !== 'All' && book.subject !== filters.subject) return false;
+      return true;
+    });
+  },
+  getBook: (bookId) => get().data?.books?.find((b) => b.id === bookId) || null,
 }));

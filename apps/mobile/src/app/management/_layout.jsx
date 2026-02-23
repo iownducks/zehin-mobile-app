@@ -1,6 +1,6 @@
 import { useUser } from '@/context/UserContext';
 import { Redirect, Tabs } from 'expo-router';
-import { BarChart2, Home, School, Users } from 'lucide-react-native';
+import { BarChart2, BookOpen, Home, School, Users } from 'lucide-react-native';
 
 export default function ManagementLayout() {
   const { user } = useUser();
@@ -18,6 +18,7 @@ export default function ManagementLayout() {
       <Tabs.Screen name="schools" options={{ title: 'Schools', tabBarIcon: ({ color }) => <School color={color} size={22} /> }} />
       <Tabs.Screen name="reports" options={{ title: 'Reports', tabBarIcon: ({ color }) => <BarChart2 color={color} size={22} /> }} />
       <Tabs.Screen name="users" options={{ title: 'All Users', tabBarIcon: ({ color }) => <Users color={color} size={22} /> }} />
+      <Tabs.Screen name="books" options={{ title: 'Books', tabBarIcon: ({ color }) => <BookOpen color={color} size={22} /> }} />
     </Tabs>
   );
 }

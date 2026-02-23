@@ -1,22 +1,31 @@
 import { useUser } from '@/context/UserContext';
 import { useSchoolStore } from '@/store/schoolStore';
-import { CheckCircle, ChevronDown, ChevronRight, Clock } from 'lucide-react-native';
+import useUpload from '@/utils/useUpload';
+import * as ImagePicker from 'expo-image-picker';
+import { useRouter } from 'expo-router';
+import { BookOpen, Camera, CheckCircle, ChevronDown, ChevronRight, Clock, X } from 'lucide-react-native';
 import React, { useState } from 'react';
-import { Alert, Modal, ScrollView, Text, TextInput, TouchableOpacity, View } from 'react-native';
+import { ActivityIndicator, Alert, Image, Modal, ScrollView, Text, TextInput, TouchableOpacity, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 const FILTERS = ['all', 'pending', 'submitted', 'graded', 'overdue'];
+const MAX_PHOTOS = 3;
 
 export default function StudentTasks() {
   const insets = useSafeAreaInsets();
   const { user } = useUser();
+  const router = useRouter();
   const { getStudentTasks, submitTask, getUser } = useSchoolStore();
+  const [upload, { loading: uploadLoading }] = useUpload();
 
   const allTasks = getStudentTasks(user || {});
   const [filter, setFilter] = useState('all');
   const [expandedId, setExpandedId] = useState(null);
   const [submitModal, setSubmitModal] = useState(null);
   const [note, setNote] = useState('');
+  const [photos, setPhotos] = useState([]); // [{ uri, mimeType }]
+  const [submitting, setSubmitting] = useState(false);
+  const [lightboxImage, setLightboxImage] = useState(null);
 
   const getTaskStatus = (task) => {
     const sub = task.submissions?.find((s) => s.studentId === user?.id);
@@ -31,12 +40,93 @@ export default function StudentTasks() {
     return getTaskStatus(t) === filter;
   }).sort((a, b) => new Date(a.dueDate) - new Date(b.dueDate));
 
-  const handleSubmit = async () => {
-    if (!submitModal) return;
-    await submitTask(submitModal.id, user.id, note);
+  const openSubmitModal = (task) => {
+    setSubmitModal(task);
+    setNote('');
+    setPhotos([]);
+  };
+
+  const closeSubmitModal = () => {
     setSubmitModal(null);
     setNote('');
-    Alert.alert('Submitted!', 'Your task has been submitted successfully.');
+    setPhotos([]);
+  };
+
+  const pickPhoto = async (fromCamera) => {
+    if (photos.length >= MAX_PHOTOS) {
+      Alert.alert('Limit reached', `You can attach up to ${MAX_PHOTOS} photos.`);
+      return;
+    }
+    let result;
+    try {
+      if (fromCamera) {
+        const perm = await ImagePicker.requestCameraPermissionsAsync();
+        if (!perm.granted) {
+          Alert.alert('Permission needed', 'Camera access is required to take photos.');
+          return;
+        }
+        result = await ImagePicker.launchCameraAsync({
+          mediaTypes: ImagePicker.MediaTypeOptions.Images,
+          quality: 0.7,
+          allowsEditing: true,
+          aspect: [4, 3],
+        });
+      } else {
+        const perm = await ImagePicker.requestMediaLibraryPermissionsAsync();
+        if (!perm.granted) {
+          Alert.alert('Permission needed', 'Gallery access is required to pick photos.');
+          return;
+        }
+        result = await ImagePicker.launchImageLibraryAsync({
+          mediaTypes: ImagePicker.MediaTypeOptions.Images,
+          quality: 0.7,
+          allowsEditing: true,
+          aspect: [4, 3],
+        });
+      }
+    } catch (e) {
+      Alert.alert('Error', 'Could not open image picker.');
+      return;
+    }
+    if (!result.canceled && result.assets?.length > 0) {
+      const asset = result.assets[0];
+      setPhotos((prev) => [...prev, { uri: asset.uri, mimeType: asset.mimeType || 'image/jpeg' }]);
+    }
+  };
+
+  const showPhotoOptions = () => {
+    Alert.alert('Add Photo', 'Choose source', [
+      { text: 'Take Photo', onPress: () => pickPhoto(true) },
+      { text: 'Choose from Gallery', onPress: () => pickPhoto(false) },
+      { text: 'Cancel', style: 'cancel' },
+    ]);
+  };
+
+  const removePhoto = (index) => {
+    setPhotos((prev) => prev.filter((_, i) => i !== index));
+  };
+
+  const handleSubmit = async () => {
+    if (!submitModal) return;
+    setSubmitting(true);
+    try {
+      const attachments = [];
+      for (const photo of photos) {
+        const result = await upload({ reactNativeAsset: { uri: photo.uri, mimeType: photo.mimeType } });
+        if (result?.url) {
+          attachments.push({ url: result.url, mimeType: result.mimeType || photo.mimeType });
+        } else if (result?.error) {
+          Alert.alert('Upload failed', result.error + '\nSubmitting without this photo.');
+        }
+      }
+      await submitTask(submitModal.id, user.id, note, attachments);
+      closeSubmitModal();
+      Alert.alert('Submitted!', 'Your task has been submitted successfully.');
+    } catch (e) {
+      Alert.alert('Error', 'Something went wrong. Please try again.');
+    } finally {
+      setSubmitting(false);
+    }
   };
 
   const statusConfig = {
@@ -97,6 +187,15 @@ export default function StudentTasks() {
                       <Text style={{ color: '#757575', fontSize: 12, marginTop: 4 }}>
                         {task.subject} • {teacher?.name || 'Teacher'}
                       </Text>
+                      {/* Book reference badge */}
+                      {task.bookTitle && task.chapterTitle && (
+                        <View style={{ flexDirection: 'row', alignItems: 'center', gap: 4, marginTop: 4 }}>
+                          <BookOpen size={11} color="#5C6BC0" />
+                          <Text style={{ color: '#5C6BC0', fontSize: 11 }} numberOfLines={1}>
+                            {task.bookTitle} • Ch. {task.chapterNumber}: {task.chapterTitle}
+                          </Text>
+                        </View>
+                      )}
                     </View>
                     <View style={{ alignItems: 'flex-end', gap: 4 }}>
                       <View style={{ backgroundColor: sc.bg, borderRadius: 8, paddingHorizontal: 8, paddingVertical: 3 }}>
@@ -120,10 +219,42 @@ export default function StudentTasks() {
                   <View style={{ backgroundColor: '#F8F9FF', borderTopWidth: 1, borderColor: '#E0E0E0', padding: 16 }}>
                     <Text style={{ fontSize: 14, color: '#424242', lineHeight: 21, marginBottom: 16 }}>{task.description}</Text>
 
+                    {/* Open in Reader button */}
+                    {task.bookId && task.chapterId && (
+                      <TouchableOpacity
+                        onPress={() => router.push(`/reader/${task.bookId}?chapter=${task.chapterId}`)}
+                        style={{ backgroundColor: '#E8EAF6', borderRadius: 10, padding: 12, flexDirection: 'row', alignItems: 'center', gap: 10, marginBottom: 14 }}
+                      >
+                        <BookOpen size={18} color="#3949AB" />
+                        <View style={{ flex: 1 }}>
+                          <Text style={{ color: '#3949AB', fontWeight: '700', fontSize: 13 }}>Open in Reader</Text>
+                          <Text style={{ color: '#7986CB', fontSize: 11 }} numberOfLines={1}>
+                            Ch. {task.chapterNumber}: {task.chapterTitle}
+                          </Text>
+                        </View>
+                        <ChevronRight size={16} color="#3949AB" />
+                      </TouchableOpacity>
+                    )}
+
                     {sub ? (
                       <View style={{ backgroundColor: '#FFFFFF', borderRadius: 12, padding: 14, borderWidth: 1, borderColor: '#E0E0E0' }}>
                         <Text style={{ fontWeight: '600', color: '#1A237E', marginBottom: 6 }}>Your Submission</Text>
                         {sub.note ? <Text style={{ color: '#424242', fontSize: 13, marginBottom: 8 }}>"{sub.note}"</Text> : null}
+                        {/* Submitted photo thumbnails */}
+                        {sub.attachments?.length > 0 && (
+                          <View style={{ marginBottom: 8 }}>
+                            <Text style={{ fontSize: 12, color: '#757575', marginBottom: 6 }}>
+                              📎 {sub.attachments.length} photo{sub.attachments.length > 1 ? 's' : ''} attached
+                            </Text>
+                            <View style={{ flexDirection: 'row', gap: 8 }}>
+                              {sub.attachments.map((att, idx) => (
+                                <TouchableOpacity key={idx} onPress={() => setLightboxImage(att.url)}>
+                                  <Image source={{ uri: att.url }} style={{ width: 64, height: 64, borderRadius: 8, borderWidth: 1, borderColor: '#E0E0E0' }} resizeMode="cover" />
+                                </TouchableOpacity>
+                              ))}
+                            </View>
+                          </View>
+                        )}
                         <Text style={{ color: '#9E9E9E', fontSize: 12 }}>
                           Submitted: {new Date(sub.submittedAt).toLocaleDateString()}
                         </Text>
@@ -136,7 +267,7 @@ export default function StudentTasks() {
                       </View>
                     ) : (
                       <TouchableOpacity
-                        onPress={() => setSubmitModal(task)}
+                        onPress={() => openSubmitModal(task)}
                         style={{ backgroundColor: '#1A237E', borderRadius: 12, padding: 14, alignItems: 'center' }}
                       >
                         <Text style={{ color: '#FFF', fontWeight: 'bold', fontSize: 15 }}>
@@ -156,7 +287,12 @@ export default function StudentTasks() {
       <Modal visible={!!submitModal} transparent animationType="slide">
         <View style={{ flex: 1, backgroundColor: 'rgba(0,0,0,0.5)', justifyContent: 'flex-end' }}>
           <View style={{ backgroundColor: '#FFFFFF', borderTopLeftRadius: 20, borderTopRightRadius: 20, padding: 24, paddingBottom: insets.bottom + 20 }}>
-            <Text style={{ fontSize: 18, fontWeight: 'bold', color: '#1A237E', marginBottom: 4 }}>Submit Task</Text>
+            <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 4 }}>
+              <Text style={{ fontSize: 18, fontWeight: 'bold', color: '#1A237E', flex: 1 }}>Submit Task</Text>
+              <TouchableOpacity onPress={closeSubmitModal}>
+                <X size={22} color="#9E9E9E" />
+              </TouchableOpacity>
+            </View>
             <Text style={{ color: '#757575', fontSize: 13, marginBottom: 16 }} numberOfLines={2}>{submitModal?.title}</Text>
 
             <Text style={{ color: '#424242', marginBottom: 8, fontSize: 13, fontWeight: '500' }}>
@@ -168,18 +304,69 @@ export default function StudentTasks() {
               placeholder="e.g. Completed all exercises, had difficulty with Q3..."
               multiline
               numberOfLines={3}
-              style={{ backgroundColor: '#F5F5F5', borderRadius: 12, padding: 14, fontSize: 14, borderWidth: 1, borderColor: '#E0E0E0', height: 80, textAlignVertical: 'top', marginBottom: 16 }}
+              style={{ backgroundColor: '#F5F5F5', borderRadius: 12, padding: 14, fontSize: 14, borderWidth: 1, borderColor: '#E0E0E0', height: 80, textAlignVertical: 'top', marginBottom: 14 }}
             />
+
+            {/* Photo attachments */}
+            <Text style={{ color: '#424242', marginBottom: 8, fontSize: 13, fontWeight: '500' }}>
+              📷 Homework Photos ({photos.length}/{MAX_PHOTOS})
+            </Text>
+            <View style={{ flexDirection: 'row', gap: 10, marginBottom: 16, flexWrap: 'wrap' }}>
+              {photos.map((photo, idx) => (
+                <View key={idx} style={{ position: 'relative' }}>
+                  <Image
+                    source={{ uri: photo.uri }}
+                    style={{ width: 76, height: 76, borderRadius: 10, borderWidth: 1, borderColor: '#E0E0E0' }}
+                    resizeMode="cover"
+                  />
+                  <TouchableOpacity
+                    onPress={() => removePhoto(idx)}
+                    style={{ position: 'absolute', top: -6, right: -6, backgroundColor: '#C62828', borderRadius: 10, width: 20, height: 20, alignItems: 'center', justifyContent: 'center' }}
+                  >
+                    <X size={12} color="#FFF" />
+                  </TouchableOpacity>
+                </View>
+              ))}
+              {photos.length < MAX_PHOTOS && (
+                <TouchableOpacity
+                  onPress={showPhotoOptions}
+                  style={{ width: 76, height: 76, borderRadius: 10, borderWidth: 2, borderColor: '#E0E0E0', borderStyle: 'dashed', alignItems: 'center', justifyContent: 'center', backgroundColor: '#F8F9FF' }}
+                >
+                  <Camera size={22} color="#9E9E9E" />
+                  <Text style={{ color: '#9E9E9E', fontSize: 10, marginTop: 4 }}>Add Photo</Text>
+                </TouchableOpacity>
+              )}
+            </View>
+
             <View style={{ flexDirection: 'row', gap: 10 }}>
-              <TouchableOpacity onPress={() => setSubmitModal(null)} style={{ flex: 1, backgroundColor: '#F5F5F5', borderRadius: 12, padding: 14, alignItems: 'center' }}>
+              <TouchableOpacity onPress={closeSubmitModal} style={{ flex: 1, backgroundColor: '#F5F5F5', borderRadius: 12, padding: 14, alignItems: 'center' }}>
                 <Text style={{ color: '#424242', fontWeight: '600' }}>Cancel</Text>
               </TouchableOpacity>
-              <TouchableOpacity onPress={handleSubmit} style={{ flex: 2, backgroundColor: '#1A237E', borderRadius: 12, padding: 14, alignItems: 'center' }}>
-                <Text style={{ color: '#FFF', fontWeight: 'bold' }}>Submit</Text>
+              <TouchableOpacity
+                onPress={handleSubmit}
+                disabled={submitting || uploadLoading}
+                style={{ flex: 2, backgroundColor: submitting || uploadLoading ? '#9FA8DA' : '#1A237E', borderRadius: 12, padding: 14, alignItems: 'center', flexDirection: 'row', justifyContent: 'center', gap: 8 }}
+              >
+                {(submitting || uploadLoading) && <ActivityIndicator size="small" color="#FFF" />}
+                <Text style={{ color: '#FFF', fontWeight: 'bold' }}>
+                  {submitting || uploadLoading ? 'Uploading...' : 'Submit'}
+                </Text>
               </TouchableOpacity>
             </View>
           </View>
         </View>
+      </Modal>
+
+      {/* Image Lightbox */}
+      <Modal visible={!!lightboxImage} transparent animationType="fade">
+        <TouchableOpacity
+          style={{ flex: 1, backgroundColor: 'rgba(0,0,0,0.92)', alignItems: 'center', justifyContent: 'center' }}
+          onPress={() => setLightboxImage(null)}
+          activeOpacity={1}
+        >
+          <Image source={{ uri: lightboxImage }} style={{ width: '95%', height: '80%' }} resizeMode="contain" />
+          <Text style={{ color: '#FFF', marginTop: 16, opacity: 0.5, fontSize: 13 }}>Tap to close</Text>
+        </TouchableOpacity>
       </Modal>
     </View>
   );

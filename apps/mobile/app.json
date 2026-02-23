@@ -1,13 +1,15 @@
 {
   "expo": {
-    "name": "Anything mobile app",
+    "name": "Zihn",
+    "slug": "zihn",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
     "userInterfaceStyle": "automatic",
-    "newArchEnabled": true,
+    "newArchEnabled": false,
     "ios": {
       "supportsTablet": true,
+      "bundleIdentifier": "pk.zihn.app",
       "infoPlist": {
         "ITSAppUsesNonExemptEncryption": false
       }
@@ -15,13 +17,13 @@
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/images/adaptive-icon.png",
-        "backgroundColor": "#ffffff"
+        "backgroundColor": "#1A237E"
       },
+      "package": "pk.zihn.app",
       "permissions": [
         "android.permission.RECORD_AUDIO",
         "android.permission.MODIFY_AUDIO_SETTINGS"
-      ],
-      "package": "xyz.create.CreateExpoEnvironment"
+      ]
     },
     "plugins": [
       [
@@ -35,10 +37,10 @@
         {
           "image": "./assets/images/splash-icon.png",
           "imageWidth": 200,
-          "resizeMode": "contain"
+          "resizeMode": "contain",
+          "backgroundColor": "#1A237E"
         }
       ],
-      "expo-audio",
       [
         "expo-build-properties",
         {
@@ -47,20 +49,14 @@
           }
         }
       ],
-      [
-        "expo-video",
-        {
-          "supportsBackgroundPlayback": true,
-          "supportsPictureInPicture": true
-        }
-      ],
       "expo-font",
       "expo-secure-store",
       "expo-web-browser"
     ],
     "web": {
       "bundler": "metro",
-      "favicon": "./assets/images/favicon.png"
+      "favicon": "./assets/images/favicon.png",
+      "output": "single"
     },
     "experiments": {
       "typedRoutes": true

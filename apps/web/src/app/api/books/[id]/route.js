@@ -4,21 +4,38 @@ export async function GET(request, { params }) {
   try {
     const { id } = params;
 
-    // Get book details
     const books = await sql`
-      SELECT * FROM books WHERE id = ${id}
+      SELECT
+        id, title, subject, class_level, board,
+        cover_color, description, is_published, created_at, updated_at
+      FROM books
+      WHERE id = ${id}
     `;
 
     if (books.length === 0) {
       return Response.json({ error: "Book not found" }, { status: 404 });
     }
 
-    // Get chapters for this book
     const chapters = await sql`
-      SELECT id, chapter_number, title, content
-      FROM chapters 
-      WHERE book_id = ${id}
-      ORDER BY chapter_number ASC
+      SELECT
+        c.id,
+        c.number,
+        c.title,
+        c.summary,
+        c.created_at,
+        json_agg(
+          json_build_object(
+            'id', l.id,
+            'number', l.number,
+            'title', l.title,
+            'type', l.type
+          ) ORDER BY l.number ASC
+        ) FILTER (WHERE l.id IS NOT NULL) AS lessons
+      FROM chapters c
+      LEFT JOIN lessons l ON l.chapter_id = c.id
+      WHERE c.book_id = ${id}
+      GROUP BY c.id
+      ORDER BY c.number ASC
     `;
 
     return Response.json({
